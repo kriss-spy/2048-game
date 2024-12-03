@@ -4,6 +4,7 @@
 # test in local edit again
 # changes in local
 # test in remote
+# test in ipad edit
 import numpy as np
 import random
 def init_grid():
