@@ -2,6 +2,7 @@
 # test in remote edit
 # test in local edit
 # test in local edit again
+# test in remote
 import numpy as np
 import random
 def init_grid():
