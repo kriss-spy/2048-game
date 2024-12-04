@@ -3,7 +3,7 @@ import random
 
 
 def init_grid():
-    grid = np.zeros((4, 4))
+    grid = np.zeros((4, 4), dtype=int)
     return grid
 
 
@@ -27,7 +27,6 @@ def add_new(grid):
     return grid
 
 
-
 # 2 2 2 2 -> 4 4 0 0
 # 0 2 2 0 -> 4 0 0 0
 # 0 0 2 2 -> 4 0 0 0
@@ -36,21 +35,22 @@ def add_new(grid):
 # 2. if equals, combine
 # 3. loop until end (no 0 between and no two same numbers)
 
+
 def rollin_row(row):
     l = len(row)
     flag = True
     while flag:
-        flag = False 
-        for i in range(l-1):
-            if row[i] == 0 and row[i+1] != 0:
-                row[i], row[i+1] = row[i+1], row[i]
+        flag = False
+        for i in range(l - 1):
+            if row[i] == 0 and row[i + 1] != 0:
+                row[i], row[i + 1] = row[i + 1], row[i]
                 flag = True
-        for i in range(l-1):
-            if row[i] != 0 and row[i] == row[i+1]:
-                row[i] += row[i+1]
-                row[i+1] = 0
+        for i in range(l - 1):
+            if row[i] != 0 and row[i] == row[i + 1]:
+                row[i] += row[i + 1]
+                row[i + 1] = 0
                 flag = True
-            
+
     return row
 
 
@@ -74,8 +74,8 @@ def rollin(grid, dir):
 def test():
     # grid = init_grid()
     # print("init:\n", grid)
-    grid = np.array([[8,0,0,0],[0,0,0,0],[2,4,0,0],[0,0,0,0]])
-    
+    grid = np.array([[8, 0, 0, 0], [0, 0, 0, 0], [2, 4, 0, 0], [0, 0, 0, 0]])
+
     grid = rollin(grid, "d")
     print("after rollin:")
     print("grid:\n", grid)
@@ -83,28 +83,52 @@ def test():
 
 # test()
 
+import os
+import platform
+
+
+def clear_console():
+    # Check the current operating system
+    if platform.system() == "Windows":
+        os.system("cls")  # Clear console for Windows
+    else:
+        os.system("clear")  # Clear console for macOS and Linux
+
+
 def my2048():
     grid = init_grid()
     gird = add_new(grid)
     print(grid)
     while True:
-        dir = input()
+        dir = input("> ")
         if dir == "q":
             break
         if dir not in "lrud":
-            print("Unknow command.")
+            clear_console()
+            print(f"Unknow command {dir}")
             print("Press l, r, u, or d + Enter")
             print(grid)
             continue
         origin_grid = np.copy(grid)
         grid = rollin(grid, dir)
         if np.array_equal(grid, origin_grid):
+            clear_console()
+            if not np.any(grid == 0):
+                print(grid)
+                print("Game Over ! :(")
+                break
             print("The grid is stuck")
             print("Move in another direction")
             print(grid)
             continue
         grid = add_new(grid)
+        clear_console()
         print(grid)
+        # for i in grid:
+        #     for j in i:
+        #         print(j, end=" ")
+        #     print()
 
-my2048()
-        
+
+if __name__ == "__main__":
+    my2048()
