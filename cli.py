@@ -52,19 +52,6 @@ def rollin_row(row):
                 flag = True
             
     return row
-# bugged
-# def rollin_row(row):
-#     for i in range(len(row)):
-#         while row[i] == 0:
-#             row = row[:i] + row[i + 1 :] + [row[i]]
-#         if row[i] != 0 and i != 0:
-#             if row[i - 1] == row[i]:
-#                 row[i - 1] += row[i]
-#                 row[i] = 0
-#     return row
-
-
-# print(rollin_row([2,2,2,2]))
 
 
 def rollin(grid, dir):
