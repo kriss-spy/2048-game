@@ -27,32 +27,41 @@ def add_new(grid):
     return grid
 
 
-# def bad_rollin_row(row):
-#     for i in range(len(row) - 1):
-#         if row[i] != 0:
-#             for j in range(i + 1, len(row)):
-#                 if row[j] == row[i]:
-#                     row[i] += row[j]
-#                     row[j] = 0
-#                     break
-#                 elif row[j] == 0:
-#                     continue
-#                 else:
-#                     break
-#     return row
-
 
 # 2 2 2 2 -> 4 4 0 0
-# bugged
+# 0 2 2 0 -> 4 0 0 0
+# 0 0 2 2 -> 4 0 0 0
+# 0 2 0 2 -> 4 0 0 0
+# 1. if 0 between, move
+# 2. if equals, combine
+# 3. loop until end (no 0 between and no two same numbers)
+
 def rollin_row(row):
-    for i in range(len(row)):
-        while row[i] == 0:
-            row = row[:i] + row[i + 1 :] + [row[i]]
-        if row[i] != 0 and i != 0:
-            if row[i - 1] == row[i]:
-                row[i - 1] += row[i]
-                row[i] = 0
+    l = len(row)
+    flag = True
+    while flag:
+        flag = False 
+        for i in range(l-1):
+            if row[i] == 0 and row[i+1] != 0:
+                row[i], row[i+1] = row[i+1], row[i]
+                flag = True
+        for i in range(l-1):
+            if row[i] != 0 and row[i] == row[i+1]:
+                row[i] += row[i+1]
+                row[i+1] = 0
+                flag = True
+            
     return row
+# bugged
+# def rollin_row(row):
+#     for i in range(len(row)):
+#         while row[i] == 0:
+#             row = row[:i] + row[i + 1 :] + [row[i]]
+#         if row[i] != 0 and i != 0:
+#             if row[i - 1] == row[i]:
+#                 row[i - 1] += row[i]
+#                 row[i] = 0
+#     return row
 
 
 # print(rollin_row([2,2,2,2]))
@@ -76,14 +85,39 @@ def rollin(grid, dir):
 
 
 def test():
-    grid = init_grid()
-    print(grid)
-    grid = add_new(grid)
-    print(grid)
-    grid = add_new(grid)
-    print(grid)
+    # grid = init_grid()
+    # print("init:\n", grid)
+    grid = np.array([[8,0,0,0],[0,0,0,0],[2,4,0,0],[0,0,0,0]])
+    
     grid = rollin(grid, "d")
+    print("after rollin:")
+    print("grid:\n", grid)
+
+
+# test()
+
+def my2048():
+    grid = init_grid()
+    gird = add_new(grid)
     print(grid)
+    while True:
+        dir = input()
+        if dir == "q":
+            break
+        if dir not in "lrud":
+            print("Unknow command.")
+            print("Press l, r, u, or d + Enter")
+            print(grid)
+            continue
+        origin_grid = np.copy(grid)
+        grid = rollin(grid, dir)
+        if np.array_equal(grid, origin_grid):
+            print("The grid is stuck")
+            print("Move in another direction")
+            print(grid)
+            continue
+        grid = add_new(grid)
+        print(grid)
 
-
-test()
+my2048()
+        
